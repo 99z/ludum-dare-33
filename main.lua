@@ -2,62 +2,32 @@ local sti = require "lib/sti"
 
 function love.load()
 
-  BGTiles = love.graphics.newImage('assets/images/map.png')
-  BGTiles:setFilter("nearest", "linear")
+  windowWidth = love.graphics.getWidth()
+  windowHeight = love.graphics.getHeight()
 
-  TileW, TileH = 16, 16
-  local tilesetW, tilesetH = BGTiles:getWidth(), BGTiles:getHeight()
+  love.physics.setMeter(8)
 
-  local quadInfo = {
-    { 0, 0 },
-    { 16, 0 },
-    { 0, 16 },
-    { 16, 16 }
-  }
+  map = sti.new("testmap.lua")
+  world = love.physics.newWorld(0, 0)
 
-  Quads = {}
-  for i,info in ipairs(quadInfo) do
-    Quads[i] = love.graphics.newQuad(info[1], info[2],
-                                     TileW, TileH,
-                                     tilesetW, tilesetH )
-   end
-
-  TileTable = {
-    { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 },
-    { 3, 3, 4, 3, 4, 3, 3, 4, 3, 3 },
-    { 3, 3, 4, 3, 4, 3, 3, 4, 3, 3 },
-    { 3, 3, 4, 3, 4, 3, 3, 4, 3, 3 },
-    { 3, 3, 4, 4, 4, 3, 3, 4, 3, 3 },
-    { 3, 3, 4, 3, 4, 3, 3, 4, 3, 3 },
-    { 3, 3, 4, 3, 4, 3, 3, 4, 3, 3 },
-    { 3, 3, 4, 3, 4, 3, 3, 4, 3, 3 },
-    { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 },
-  }
+  collision = map:initWorldCollision(world)
 
 end
 
 function love.draw()
 
-  -- for rowIndex = 1, #TileTable do
-  --   local row = TileTable[rowIndex]
-  --   for columnIndex = 1, #row do
-  --     local number = row[columnIndex]
-  --     local x = (columnIndex - 1) * TileW * scale
-  --     local y = (rowIndex - 1) * TileH * scale
-  --     love.graphics.draw(BGTiles, Quads[number], x, y, 0, scale, scale )
-  --    end
-  --  end
+  love.graphics.scale(3, 3)
+  local translateX = 0
+  local translateY = 0
 
-  for rowIndex,row in ipairs(TileTable) do
-    for columnIndex,number in ipairs(row) do
-      local x,y = (columnIndex - 1) * TileW * scale, (rowIndex - 1) * TileH * scale
-      love.graphics.draw(BGTiles, Quads[number], x, y, 0, scale, scale)
-    end
-  end
+  map:draw()
+  love.graphics.setColor(255, 255, 255, 255)
 
 end
 
 function love.update(dt)
+
+  map:update(dt)
 
 end
 
