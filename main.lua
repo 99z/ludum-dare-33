@@ -84,7 +84,14 @@ function love.load()
   msgs_dinner[11] = _navi:new('he could have done.', {box_anim = false})
 
   msgs_park = {}
-  msgs_park[1] = _navi:new('Park')
+  msgs_park[1] = _navi:new("We came here often.", {box_anim=false})
+  msgs_park[2] = _navi:new("He said he enjoyed\n\nwatching people in", {box_anim = false})
+  msgs_park[3] = _navi:new('the park. I called\n\nhim creepy, but', {box_anim = false})
+  msgs_park[4] = _navi:new('really, I liked it\n\ntoo. We would sit', {box_anim=false})
+  msgs_park[5] = _navi:new('with our fingers\n\ninterlocked and', {box_anim=false})
+  msgs_park[6] = _navi:new('share silence\n\ntogether. My head', {box_anim=false})
+  msgs_park[7] = _navi:new("usually found its\n\nway to his shoulder.", {box_anim = false})
+  msgs_park[8] = _navi:new("He was warm.", {box_anim = false})
 
   msgs_hospital = {}
   msgs_hospital[1] = _navi:new('Hospital')
@@ -136,7 +143,7 @@ function love.draw()
     _navi.play_list(msgs_dinner,0,225)
 
   elseif stepping_on_event(41 * 8, 47 * 8, 32, 8) then
-    _navi.play_list(msgs_park,20,55)
+    _navi.play_list(msgs_park,-1,225)
 
   elseif stepping_on_event(109 * 8, 38 * 8, 16, 8) then
     _navi.play_list(msgs_hospital,25,235)
@@ -148,7 +155,7 @@ function love.draw()
     _navi.play_list(msgs_forest,150,25)
 
   elseif stepping_on_event(117 * 8, 134 * 8, 16, 8) and reached_end then
-    _navi.play_list(msgs_end,25,200)
+    _navi.play_list(msgs_end,0,225)
   end
 
   arc.clear_key()
