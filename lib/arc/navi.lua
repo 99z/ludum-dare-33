@@ -42,7 +42,7 @@ _navi.__index = _navi
 function _navi:new(s,opt)
     local o = {}
     setmetatable(o,_navi)
-    
+
     -- a ton of options!
 	local opt = opt or {}
     local w = opt.w									    -- text wrap width
@@ -60,7 +60,7 @@ function _navi:new(s,opt)
     o.box_open = misc.get_def(opt.box_open,false)       -- true = box open animation
     o.box_close = misc.get_def(opt.box_close,false)     -- true = box close animation
     o.box_anim = misc.get_def(opt.box_anim,             -- true = box open/close animation
-        not (o.box_open or o.box_close))	    
+        not (o.box_open or o.box_close))
     o.name = opt.name								    -- name
     o.face = opt.face								    -- face picture
 	o.face_pos = opt.face_pos or 'l'					-- face picture pos
@@ -82,7 +82,7 @@ function _navi:new(s,opt)
 			end
 		end
 	end
-		
+
     o.dytext = (s=='' and -arc.fn.h) or 0 -- if message is '', move choices up one line
     o.dyname = (o.name and arc.fn.h) or 0
 	-- set face info
@@ -124,14 +124,14 @@ function _navi:new(s,opt)
 		s = _navi.add_nls(s,w)
 	end
 	if s:len() == 0 then s = s..' ' end -- prevent code crash
-	
+
     -- adds pauses in a hackish way. it adds spaces before the pause command
     -- and adjusts the block display pos. n spaces = pause of n/msg_spd sec
     local ps = string.rep(' ',arc.cfg.msg_nc_short_pause)
     local pl = string.rep(' ',arc.cfg.msg_nc_long_pause)
     s = s:gsub('|,',ps..'|,')
     s = s:gsub('|:',pl..'|:')
-    
+
 	o.b = {}
     o.lw = {} 	-- line: widths
     o.lb = {} 	-- line: last bloc
@@ -139,7 +139,7 @@ function _navi:new(s,opt)
     o.rnc = {} 	-- block: rolling total # chars
     o.lb[0] = 0
 	o.rnc[0] = 0
-	
+
     local i = 1					-- pos in 's'
     local j = 1 				-- pos where last bloc ended
     local e = 1 				-- current bloc #
@@ -152,7 +152,7 @@ function _navi:new(s,opt)
     while true do -- parse all the information out!
         b = ''
         z = s:sub(i,i+1)
-        
+
         -- start a new bloc when you see a formatting command
         if z == '|!' then
             b = s:sub(j,i-1)
@@ -170,7 +170,7 @@ function _navi:new(s,opt)
             b = s:sub(j,i-1)
             dx,dy = -arc.fn.w(pl)+arc.fn.w(str.unformat(b)),0
         end
-        
+
         -- reached the end
         if i >= s:len() then
             b = s:sub(j,i)
@@ -178,10 +178,10 @@ function _navi:new(s,opt)
             o.lw[cl] = xc+dx
             o.lb[cl] = e
 			-- if choices don't fit in same box, they will appear in next box
-			-- so put in keypress to let player read current box 
+			-- so put in keypress to let player read current box
             if o.nrows and not o.wait and (o.chs and cl%o.nrows+o.nvchs>o.nrows) then z = '|!' end
         end
-        
+
         -- create bloc
         if b ~= '' then
             o.b[e] = _bloc:new(b,xc,yc,cc)
@@ -201,11 +201,11 @@ function _navi:new(s,opt)
             xc,yc = xc+dx,yc+dy
             e,j = e+1,i
         end
-        
+
         if i >= s:len() then break end
-        i = i+1    
+        i = i+1
     end
-        
+
     -- alignment
     o.nl = cl
     if o.chs then
@@ -215,14 +215,14 @@ function _navi:new(s,opt)
         o.nchs = 0
         o.wll = math.max(unpack(o.lw))
     end
-    
+
     -- total height of all lines (including choices)
     if o.nrows then
         o.hls = arc.fn.h*o.nrows
     else
         o.nrows = o.nl+o.nchs
         o.hls = arc.fn.h*o.nrows
-    end    
+    end
     -- dxm and dym are multipliers to align (i.e. center) text
     o.dxm = tab.index({l=0,m=.5,r=1},o.alx)
     o.dxmb = tab.index({l=0,m=.5,r=1},o.alxb)
@@ -230,7 +230,7 @@ function _navi:new(s,opt)
 	-- calculate x-shift of each bloc
 	o.bdx = {}
 	for i = 1,#o.b do o.bdx[i] = math.floor(-o.dxm*o.lw[o.bl[i]]) end
-    	
+
     o:set_pos()
     o:init()
 	return o
@@ -331,14 +331,14 @@ function _navi:play(x,y)
 
     local nc = (self.instant and math.huge) or math.floor(self.msg_spd*(lt.getTime()-self.t0))
     -- draw stuff
-    if self.box then draw.window(self.xbox, self.ybox, self.wbox, self.hbox) end    
+    if self.box then draw.window(self.xbox, self.ybox, self.wbox, self.hbox) end
     if self.name then draw.text(self.name, self.xname, self.yname, arc.col.name) end
     if self.face then
         lg.setColor(arc.col.white)
         lg.draw(self.face, self.xface, self.yface)
         if self.face_border then lg.rectangle('line', self.xface, self.yface, self.wface, self.hface) end
     end
-    
+
     -- scroll text
     if self.pos == 'scroll' and self.scroll then
 		lg.setScissor(x+self.clip[1], y+self.clip[2], self.clip[3], self.clip[4])
@@ -362,7 +362,7 @@ function _navi:play(x,y)
 		lg.pop()
 		return
     end
-    
+
 	dys = -(self.view-1)*arc.fn.h
     -- init some stuff for the choice...
     if self.pos == 'choice' then
@@ -382,15 +382,15 @@ function _navi:play(x,y)
         bf = self.lb[self.view-1]+1
         bl = self.lb[math.min(self.view+self.nrows-1,self.nl)]
         for i = bf,bl do
-		
-            -- display everything and process any keypresses       
+
+            -- display everything and process any keypresses
             if self.pos == 'show' and nc <= self.rnc[i] then -- display the current bloc
                 self.b[i]:draw(self.xtext+self.bdx[i], self.ytext+dys, nc-self.rnc[i-1])
                 self.ci = i
                 break
             else
-                self.b[i]:draw(self.xtext+self.bdx[i], self.ytext+dys)				
-				
+                self.b[i]:draw(self.xtext+self.bdx[i], self.ytext+dys)
+
 				-- handle waits at end of view
 				if self.wait and i == bl and not self.b[i].done then
 					t1 = i==#self.b and self.chs and self:chc_fits()	-- at end, choices fit, don't wait
@@ -415,7 +415,7 @@ function _navi:play(x,y)
 						end
 					end
 				end
-				
+
 				-- handle keypresses
                 if self.b[i].inp and not self.b[i].done then
                     self.ci = i
@@ -439,16 +439,16 @@ function _navi:play(x,y)
                         break
                     end
                 end
-				
+
 				-- break out of loop if you reached the end
                 if self.pos == 'show' and i == #self.b then
                     self.pos = 'choice'
                     self.t0 = lt.getTime()
                     break
                 end
-				
-            end        
-        
+
+            end
+
         end
     end
 
@@ -485,7 +485,7 @@ function _navi:play(x,y)
             end
         end
     end
-    
+
     if self.pos == 'close' and not (self.box and (self.box_anim or self.box_close)) then
         self.pos = 'over'
     end
@@ -496,7 +496,7 @@ end
 function _navi:show_blinker()
 	if ((lt.getTime()-self.t0)%arc.cfg.msg_tblink < 0.5*arc.cfg.msg_tblink) and self.blinker then
 		lg.setColor(arc.col.white)
-		lg.draw(arc.img.blinker, self.xblink, self.yblink)
+		lg.draw(arc.img.blinker, 285,30)
 	end
 end
 

@@ -33,7 +33,6 @@ function love.load()
       love.graphics.newQuad(16, 0, 16, 16, 64, 32)
     }
   }
-  print(august_spr)
 
   local spriteLayer = map.layers["Sprite Layer"]
   spriteLayer.sprite = {
@@ -72,8 +71,17 @@ function love.load()
   end
 
   msgs_dinner = {}
-  msgs_dinner[1] = _navi:new('Our first date.')
-  msgs_dinner[2] = _navi:new('Remember that night?')
+  msgs_dinner[1] = _navi:new("My first date with\n\nhim.", {box_anim=false})
+  msgs_dinner[2] = _navi:new("I'll always remember\n\nthat night...", {box_anim = false})
+  msgs_dinner[3] = _navi:new('...but not because\n\nit was romantic!', {box_anim = false})
+  msgs_dinner[4] = _navi:new('In the middle of\n\neating he started', {box_anim=false})
+  msgs_dinner[5] = _navi:new('to sneeze uncontrol-\n\nlably and knocked', {box_anim=false})
+  msgs_dinner[6] = _navi:new('his drink over.', {box_anim=false})
+  msgs_dinner[7] = _navi:new("I couldn't stop lau-\n\nghing for the rest", {box_anim = false})
+  msgs_dinner[8] = _navi:new("of the evening. I\n\nhaven't seen his", {box_anim = false})
+  msgs_dinner[9] = _navi:new("face so red since!", {box_anim = false})
+  msgs_dinner[10] = _navi:new('Somehow, that was the\n\nmost charming thing', {box_anim = false})
+  msgs_dinner[11] = _navi:new('he could have done.', {box_anim = false})
 
   msgs_park = {}
   msgs_park[1] = _navi:new('Park')
@@ -125,7 +133,7 @@ function love.draw()
 
   love.graphics.scale(0.5, 0.5)
   if stepping_on_event(200, 184, 16, 8) then
-    _navi.play_list(msgs_dinner,25,50)
+    _navi.play_list(msgs_dinner,0,225)
 
   elseif stepping_on_event(41 * 8, 47 * 8, 32, 8) then
     _navi.play_list(msgs_park,20,55)
@@ -143,6 +151,8 @@ function love.draw()
     _navi.play_list(msgs_end,25,200)
   end
 
+  arc.clear_key()
+
 end
 
 function love.update(dt)
@@ -152,7 +162,6 @@ function love.update(dt)
 
   local sprite = map.layers["Sprite Layer"].sprite
   local down = love.keyboard.isDown
-  print(sprite.x, sprite.y)
 
   local x, y = 0, 0
 

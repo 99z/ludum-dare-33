@@ -8,13 +8,13 @@ local _key,_,_ = unpack(require(arc_path .. 'input'))
 
 -- config
 arc.cfg = {
-	msg_spd = 50, 		        -- chars/sec. message speed
-	msg_tanim = 0.2,		    -- sec. duration of message box open/close animation
+	msg_spd = 10, 		        -- chars/sec. message speed
+	msg_tanim = 0,		    -- sec. duration of message box open/close animation
 	msg_tscroll = 0.2,	        -- sec. duration of message scroll animation
-	msg_tblink = 0.5,	        -- sec. period of blinker
+	msg_tblink = 1,	        -- sec. period of blinker
 	msg_txt_shdw = true,	    -- boolean. true: use text shadow, false: don't use
-  msg_nc_short_pause = 10,    -- number. number of characters wait for short pause
-  msg_nc_long_pause = 50,    -- number. number of characters wait for short pause
+  msg_nc_short_pause = 1,    -- number. number of characters wait for short pause
+  msg_nc_long_pause = 100,    -- number. number of characters wait for short pause
 	key_wait0 = .4,		        -- sec. initial wait for directional buttons
 	key_wait = .1,		        -- sebsequent wait for directional buttons
 	cur_dx = 3,		            -- delta x,y of text wrt cursor right edge
@@ -37,9 +37,10 @@ arc.col = {
 
 -- font
 arc.fn = {}
-arc.fn.f = lg.newFont('assets/fonts/uushi-11.dfont', 11)
-arc.fn.h = arc.fn.f:getHeight()+2
-arc.fn.w = function(s) return arc.fn.f:getWidth(s) end
+arc.fn.f = lg.newFont('assets/fonts/Pokemon_GB.ttf', 14)
+arc.fn.h = lg.getHeight()/3
+arc.fn.w = function(s) return windowWidth end
+print(arc.fn.w)
 lg.setFont(arc.fn.f)
 
 -- keys
@@ -57,7 +58,7 @@ arc.key = {
 
 -- images
 arc.img = {
-	cursor = lg.newImage('assets/images/cursor.png'),
+	-- cursor = lg.newImage('assets/images/cursor.png'),
 	blinker = lg.newImage('assets/images/press.png')
 }
 
