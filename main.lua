@@ -1,6 +1,5 @@
 local sti = require "lib/sti"
 require('splash')
-
 arc_path = 'lib/arc/'
 require(arc_path .. 'arc')
 _navi = require(arc_path .. 'navi')
@@ -178,8 +177,6 @@ end
 
 function love.draw()
 
-  print(state)
-
   love.graphics.scale(3, 3)
   if state == "splash" then
     splash.draw()
@@ -239,6 +236,12 @@ function love.draw()
 
 end
 
+function reunited()
+  if msgs_end[15]:is_over() then
+    love.event.quit()
+  end
+end
+
 function check_all_events_hit()
   return msgs_dinner[11]:is_over() and
          msgs_park[8]:is_over() and
@@ -249,38 +252,42 @@ end
 
 function love.update(dt)
 
-  world:update(dt)
-  arc.check_keys(dt)
+  if state == "game" then
+    reunited()
 
-  local sprite = map.layers["Sprite Layer"].sprite
-  local down = love.keyboard.isDown
+    world:update(dt)
+    arc.check_keys(dt)
 
-  local x, y = 0, 0
+    local sprite = map.layers["Sprite Layer"].sprite
+    local down = love.keyboard.isDown
 
-  if check_all_events_hit() then sprite.reached_end = true end
+    local x, y = 0, 0
 
-  -- elseifs to stop diagonal movement
-  if down("w") or down("up") then
-    sprite.image = august_anim["up"][1]
-    y = y - 8000
-  elseif down("s") or down("down") then
-    sprite.image = august_anim["down"][1]
-    y = y + 8000
-  elseif down("a") or down("left") then
-    sprite.image = august_anim["left"][1]
-    x = x - 8000
-  elseif down("d") or down("right") then
-    sprite.image = august_anim["right"][1]
-    x = x + 8000
+    if check_all_events_hit() then sprite.reached_end = true end
+
+    -- elseifs to stop diagonal movement
+    if down("w") or down("up") then
+      sprite.image = august_anim["up"][1]
+      y = y - 8000
+    elseif down("s") or down("down") then
+      sprite.image = august_anim["down"][1]
+      y = y + 8000
+    elseif down("a") or down("left") then
+      sprite.image = august_anim["left"][1]
+      x = x - 8000
+    elseif down("d") or down("right") then
+      sprite.image = august_anim["right"][1]
+      x = x + 8000
+    end
+
+    -- sprite.body:setMass(20)
+    if not sprite.movement_locked then
+      sprite.body:applyForce(x, y)
+    end
+    sprite.x, sprite.y = sprite.body:getWorldCenter()
+
+    map:update(dt)
   end
-
-  -- sprite.body:setMass(20)
-  if not sprite.movement_locked then
-    sprite.body:applyForce(x, y)
-  end
-  sprite.x, sprite.y = sprite.body:getWorldCenter()
-
-  map:update(dt)
 
 end
 
@@ -303,6 +310,9 @@ function stepping_on_event(event_x, event_y, event_width, event_height)
 end
 
 function love.keypressed(key)
-  state = "game"
+  if key == "return" or key == "e" then
+    state = "game"
+  end
+
   arc.set_key(key)
 end

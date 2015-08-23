@@ -18,5 +18,5 @@ function splash.update(dt)
 end
 
 function splash.keypressed(key)
-  state = "game"
+
 end
