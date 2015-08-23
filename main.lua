@@ -1,10 +1,13 @@
 local sti = require "lib/sti"
+require('splash')
 
 arc_path = 'lib/arc/'
 require(arc_path .. 'arc')
 _navi = require(arc_path .. 'navi')
 
 function love.load()
+
+  title = love.graphics.newImage("assets/images/title.png")
 
   music = love.audio.newSource("assets/sounds/dark.wav", "stream")
   music:setLooping(true)
@@ -167,60 +170,72 @@ function love.load()
   msgs_end[14] = _navi:new('that', {box_anim = false, skip=false, wait=2, msg_spd=4})
   msgs_end[15] = _navi:new('you?...', {box_anim = false, skip=false, wait=2, msg_spd=2})
 
+
+  state = "splash"
+  splash.load()
+
 end
 
 function love.draw()
 
+  print(state)
+
   love.graphics.scale(3, 3)
-  local translateX = 0
-  local translateY = 0
-  local sprite = map.layers["Sprite Layer"].sprite
+  if state == "splash" then
+    splash.draw()
+  else
 
-  local ww = love.graphics.getWidth()
-  local wh = love.graphics.getHeight()
-  local tx = math.floor(-sprite.x + ww / 2 - 160)
-  local ty = math.floor(-sprite.y + wh / 2 - 144)
+    local translateX = 0
+    local translateY = 0
+    local sprite = map.layers["Sprite Layer"].sprite
+
+    local ww = love.graphics.getWidth()
+    local wh = love.graphics.getHeight()
+    local tx = math.floor(-sprite.x + ww / 2 - 160)
+    local ty = math.floor(-sprite.y + wh / 2 - 144)
 
 
-  love.graphics.push()
-	love.graphics.translate(tx, ty)
-	map:setDrawRange(-tx, -ty, ww, wh)
-  -- note: this no longer accepts scale parameters, thus l.g.scale above
-  map:draw()
-  draw_event_debug(200, 184, 16, 16)
+    love.graphics.push()
+  	love.graphics.translate(tx, ty)
+  	map:setDrawRange(-tx, -ty, ww, wh)
+    -- note: this no longer accepts scale parameters, thus l.g.scale above
+    map:draw()
+    draw_event_debug(200, 184, 16, 16)
 
-  love.graphics.setColor(255, 0, 0, 255)
-  -- debug, drawing box around collidable tiles
-  -- map:drawWorldCollision(collision)
-  love.graphics.setColor(255, 0, 0, 255)
-  -- debug, drawing box around august
-  -- love.graphics.polygon("line", sprite.body:getWorldPoints(sprite.shape:getPoints()))
-  love.graphics.pop()
-  love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.setColor(255, 0, 0, 255)
+    -- debug, drawing box around collidable tiles
+    -- map:drawWorldCollision(collision)
+    love.graphics.setColor(255, 0, 0, 255)
+    -- debug, drawing box around august
+    -- love.graphics.polygon("line", sprite.body:getWorldPoints(sprite.shape:getPoints()))
+    love.graphics.pop()
+    love.graphics.setColor(255, 255, 255, 255)
 
-  love.graphics.scale(0.5, 0.5)
-  if stepping_on_event(200, 184, 16, 8) then
-    _navi.play_list(msgs_dinner,-1,225)
+    love.graphics.scale(0.5, 0.5)
+    if stepping_on_event(200, 184, 16, 8) then
+      _navi.play_list(msgs_dinner,-1,225)
 
-  elseif stepping_on_event(41 * 8, 47 * 8, 32, 8) then
-    _navi.play_list(msgs_park,-1,225)
+    elseif stepping_on_event(41 * 8, 47 * 8, 32, 8) then
+      _navi.play_list(msgs_park,-1,225)
 
-  elseif stepping_on_event(109 * 8, 38 * 8, 16, 8) then
-    _navi.play_list(msgs_hospital,-1,225)
+    elseif stepping_on_event(109 * 8, 38 * 8, 16, 8) then
+      _navi.play_list(msgs_hospital,-1,225)
 
-  elseif stepping_on_event(139 * 8, 87 * 8, 8, 40) then
-    _navi.play_list(msgs_bedroom,-1,225)
+    elseif stepping_on_event(139 * 8, 87 * 8, 8, 40) then
+      _navi.play_list(msgs_bedroom,-1,225)
 
-  elseif stepping_on_event(33 * 8, 123 * 8, 128, 64) then
-    _navi.play_list(msgs_forest,-1,225)
+    elseif stepping_on_event(33 * 8, 123 * 8, 128, 64) then
+      _navi.play_list(msgs_forest,-1,225)
 
-  elseif stepping_on_event(117 * 8, 132 * 8, 16, 12) and sprite.reached_end then
-    _navi.play_list(msgs_end,-1,225)
-    sprite.movement_locked = true
-    love.audio.stop(music)
+    elseif stepping_on_event(117 * 8, 132 * 8, 16, 12) and sprite.reached_end then
+      _navi.play_list(msgs_end,-1,225)
+      sprite.movement_locked = true
+      love.audio.stop(music)
+    end
+
+    arc.clear_key()
+
   end
-
-  arc.clear_key()
 
 end
 
@@ -288,5 +303,6 @@ function stepping_on_event(event_x, event_y, event_width, event_height)
 end
 
 function love.keypressed(key)
+  state = "game"
   arc.set_key(key)
 end
