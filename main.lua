@@ -18,9 +18,26 @@ function love.load()
 
   map:addCustomLayer("Sprite Layer", 2)
 
+  august_spr = love.graphics.newImage("assets/images/august.png")
+  august_anim = {
+    up = {
+      love.graphics.newQuad(32, 0, 16, 16, 64, 32)
+    },
+    down = {
+      love.graphics.newQuad(0, 0, 16, 16, 64, 32)
+    },
+    left = {
+      love.graphics.newQuad(48, 0, 16, 16, 64, 32)
+    },
+    right = {
+      love.graphics.newQuad(16, 0, 16, 16, 64, 32)
+    }
+  }
+  print(august_spr)
+
   local spriteLayer = map.layers["Sprite Layer"]
   spriteLayer.sprite = {
-    image = love.graphics.newImage("assets/images/august01.png"),
+    image = august_anim["down"][1],
     x = 80 * scale,
     y = 72 * scale,
     -- change w & h to radius or something
@@ -50,7 +67,7 @@ function love.load()
     local x = math.floor(self.sprite.x)
     local y = math.floor(self.sprite.y)
     local r = self.sprite.r
-    love.graphics.draw(self.sprite.image, x, y, r, 1, 1, 8, 8)
+    love.graphics.draw(august_spr, self.sprite.image, x, y, r, 1, 1, 8, 8)
   end
 
   m = {}
@@ -103,10 +120,27 @@ function love.update(dt)
   local down = love.keyboard.isDown
 
   local x, y = 0, 0
-  if down("w") or down("up")		then y = y - 4000 end
-  if down("s") or down("down")	then y = y + 4000 end
-  if down("a") or down("left")	then x = x - 4000 end
-  if down("d") or down("right")	then x = x + 4000 end
+
+  if down("w") or down("up") then
+    sprite.image = august_anim["up"][1]
+    y = y - 4000
+  end
+
+  if down("s") or down("down") then
+    sprite.image = august_anim["down"][1]
+    y = y + 4000
+  end
+
+  if down("a") or down("left") then
+    sprite.image = august_anim["left"][1]
+    x = x - 4000
+  end
+
+  if down("d") or down("right") then
+    sprite.image = august_anim["right"][1]
+    x = x + 4000
+  end
+
   sprite.body:applyForce(x, y)
   sprite.x, sprite.y = sprite.body:getWorldCenter()
 
@@ -131,18 +165,6 @@ function stepping_on_event(event_x, event_y, event_width, event_height)
   end
   return false
 end
-
--- function stepping_on_event(event_x, event_y, event_width, event_height)
---   local sprite = map.layers["Sprite Layer"].sprite
---
---   if sprite.x + sprite.w >= event_x and
---      sprite.x <= event_x + event_width and
---      sprite.y + sprite.h >= event_y and
---      sprite.y + sprite.oy <= event_y + event_height then
---      return true
---   end
---   return false
--- end
 
 function love.keypressed(key)
   arc.set_key(key)
