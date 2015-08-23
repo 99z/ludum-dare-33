@@ -113,8 +113,8 @@ function love.draw()
   love.graphics.scale(0.5, 0.5)
   if stepping_on_event(200, 184, 16, 16) then
     _navi.play_list(m,25,200)
-  else if stepping_on_event(41 * 8, 47 * 8, 32, 16) then
-    _navi.play_list(m2,20,20) end
+  elseif stepping_on_event(41 * 8, 47 * 8, 32, 16) then
+    _navi.play_list(m2,20,20)
   end
 
 end
