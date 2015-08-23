@@ -11,7 +11,7 @@ function love.load()
 
   love.physics.setMeter(8)
 
-  map = sti.new("testmap_lg.lua")
+  map = sti.new("main_map.lua")
   world = love.physics.newWorld(0, 0)
 
   collision = map:initWorldCollision(world)
@@ -38,11 +38,11 @@ function love.load()
   local spriteLayer = map.layers["Sprite Layer"]
   spriteLayer.sprite = {
     image = august_anim["down"][1],
-    x = 80 * scale,
-    y = 72 * scale,
+    x = 16 * 25,
+    y = 16 * 75,
     -- change w & h to radius or something
-    w = 16/2,
-    h = 16/2,
+    w = 8,
+    h = 8,
     ox = 48/2,
     oy = 48/2,
     r = 0
@@ -73,6 +73,9 @@ function love.load()
   m = {}
   m[1] = _navi:new('This is a test')
 
+  m2 = {}
+  m2[1] = _navi:new('This is another test')
+
 end
 
 function love.draw()
@@ -95,7 +98,7 @@ function love.draw()
 	map:setDrawRange(-tx, -ty, ww, wh)
   -- note: this no longer accepts scale parameters, thus l.g.scale above
   map:draw()
-  draw_event_debug(100, 50, 30, 30)
+  draw_event_debug(200, 184, 16, 16)
 
   love.graphics.setColor(255, 0, 0, 255)
   map:drawWorldCollision(collision)
@@ -104,9 +107,10 @@ function love.draw()
   love.graphics.pop()
   love.graphics.setColor(255, 255, 255, 255)
 
-  if stepping_on_event(100, 50, 30, 30) then
-    print(sprite.x, sprite.y)
+  if stepping_on_event(200, 184, 16, 16) then
     _navi.play_list(m,20,20)
+  else if stepping_on_event(41 * 8, 47 * 8, 32, 16) then
+    _navi.play_list(m2,20,20) end
   end
 
 end
@@ -118,6 +122,7 @@ function love.update(dt)
 
   local sprite = map.layers["Sprite Layer"].sprite
   local down = love.keyboard.isDown
+  print(sprite.x, sprite.y)
 
   local x, y = 0, 0
 
