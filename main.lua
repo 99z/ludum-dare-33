@@ -19,6 +19,7 @@ function love.load()
   map:addCustomLayer("Sprite Layer", 2)
 
   august_spr = love.graphics.newImage("assets/images/august.png")
+  august_spr:setFilter('nearest', 'nearest')
   august_anim = {
     up = {
       love.graphics.newQuad(32, 0, 16, 16, 64, 32)
@@ -110,13 +111,42 @@ function love.load()
   msgs_hospital[14] = _navi:new("I cried as he\n\nheld me.", {box_anim = false})
 
   msgs_bedroom = {}
-  msgs_bedroom[1] = _navi:new('Bedroom')
+  msgs_bedroom[1] = _navi:new("I had never been with\n\nanyone like him.", {box_anim=false})
+  msgs_bedroom[2] = _navi:new("Any hesitations I had\n\nhe could wash away", {box_anim = false})
+  msgs_bedroom[3] = _navi:new('in an instant. I felt\n\nsafe. I felt happy.', {box_anim = false})
+  msgs_bedroom[4] = _navi:new('The best days were\n\nthe ones where we', {box_anim=false})
+  msgs_bedroom[5] = _navi:new('stayed in bed and\n\nwithout a care in', {box_anim=false})
+  msgs_bedroom[6] = _navi:new("the world. Content,\n\nI'd ask if we", {box_anim=false})
+  msgs_bedroom[7] = _navi:new("could have every day\n\nbe like these.", {box_anim = false})
+  msgs_bedroom[8] = _navi:new("I'm not going anywhere,\n\nhe said.", {box_anim = false})
+  msgs_bedroom[9] = _navi:new("A chaque oiseau\n\nson nid est beau,", {box_anim = false})
+  msgs_bedroom[10] = _navi:new('I said.', {box_anim = false})
 
   msgs_forest = {}
-  msgs_forest[1] = _navi:new('Forest')
+  msgs_forest[1] = _navi:new("My first date with\n\nhim.", {box_anim=false})
+  msgs_forest[2] = _navi:new("I'll always remember\n\nthat night...", {box_anim = false})
+  msgs_forest[3] = _navi:new('...but not because\n\nit was romantic!', {box_anim = false})
+  msgs_forest[4] = _navi:new('In the middle of\n\neating he started', {box_anim=false})
+  msgs_forest[5] = _navi:new('to sneeze uncontrol-\n\nlably and knocked', {box_anim=false})
+  msgs_forest[6] = _navi:new('his drink over.', {box_anim=false})
+  msgs_forest[7] = _navi:new("I couldn't stop lau-\n\nghing for the rest", {box_anim = false})
+  msgs_forest[8] = _navi:new("of the evening. I\n\nhaven't seen his", {box_anim = false})
+  msgs_forest[9] = _navi:new("face so red since!", {box_anim = false})
+  msgs_forest[10] = _navi:new('Somehow, that was the\n\nmost charming thing', {box_anim = false})
+  msgs_forest[11] = _navi:new('he could have done.', {box_anim = false})
 
   msgs_end = {}
-  msgs_end[1] = _navi:new('End')
+  msgs_end[1] = _navi:new("My first date with\n\nhim.", {box_anim=false})
+  msgs_end[2] = _navi:new("I'll always remember\n\nthat night...", {box_anim = false})
+  msgs_end[3] = _navi:new('...but not because\n\nit was romantic!', {box_anim = false})
+  msgs_end[4] = _navi:new('In the middle of\n\neating he started', {box_anim=false})
+  msgs_end[5] = _navi:new('to sneeze uncontrol-\n\nlably and knocked', {box_anim=false})
+  msgs_end[6] = _navi:new('his drink over.', {box_anim=false})
+  msgs_end[7] = _navi:new("I couldn't stop lau-\n\nghing for the rest", {box_anim = false})
+  msgs_end[8] = _navi:new("of the evening. I\n\nhaven't seen his", {box_anim = false})
+  msgs_end[9] = _navi:new("face so red since!", {box_anim = false})
+  msgs_end[10] = _navi:new('Somehow, that was the\n\nmost charming thing', {box_anim = false})
+  msgs_end[11] = _navi:new('he could have done.', {box_anim = false})
 
 end
 
