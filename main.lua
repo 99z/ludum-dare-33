@@ -49,6 +49,7 @@ function love.load()
   }
 
 
+
   spriteLayer.sprite.body = love.physics.newBody(world, spriteLayer.sprite.x/2,
                                                  spriteLayer.sprite.y/2,
                                                  "dynamic")
@@ -126,26 +127,22 @@ function love.update(dt)
 
   local x, y = 0, 0
 
+  -- elseifs to stop diagonal movement
   if down("w") or down("up") then
     sprite.image = august_anim["up"][1]
-    y = y - 4000
-  end
-
-  if down("s") or down("down") then
+    y = y - 8000
+  elseif down("s") or down("down") then
     sprite.image = august_anim["down"][1]
-    y = y + 4000
-  end
-
-  if down("a") or down("left") then
+    y = y + 8000
+  elseif down("a") or down("left") then
     sprite.image = august_anim["left"][1]
-    x = x - 4000
-  end
-
-  if down("d") or down("right") then
+    x = x - 8000
+  elseif down("d") or down("right") then
     sprite.image = august_anim["right"][1]
-    x = x + 4000
+    x = x + 8000
   end
 
+  -- sprite.body:setMass(20)
   sprite.body:applyForce(x, y)
   sprite.x, sprite.y = sprite.body:getWorldCenter()
 
