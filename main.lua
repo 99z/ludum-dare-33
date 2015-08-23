@@ -94,7 +94,20 @@ function love.load()
   msgs_park[8] = _navi:new("He was warm.", {box_anim = false})
 
   msgs_hospital = {}
-  msgs_hospital[1] = _navi:new('Hospital')
+  msgs_hospital[1] = _navi:new("I hated him seeing\n\nme like that.", {box_anim=false})
+  msgs_hospital[2] = _navi:new("I told him he wasn't\n\nallowed to see me", {box_anim = false})
+  msgs_hospital[3] = _navi:new("without my face on.\n\nHe'd just rub my", {box_anim = false})
+  msgs_hospital[4] = _navi:new('hair and smile.\n\nHe always came.', {box_anim=false})
+  msgs_hospital[5] = _navi:new('When it started to\n\nget worse, I', {box_anim=false})
+  msgs_hospital[6] = _navi:new('became more afraid.\n\nOne day, he came', {box_anim=false})
+  msgs_hospital[7] = _navi:new("dressed in a monk\n\nrobe and pretended", {box_anim = false})
+  msgs_hospital[8] = _navi:new("to cast healing\n\nspells on me.", {box_anim = false})
+  msgs_hospital[9] = _navi:new("I don't know why,\n\nbut I got angry.", {box_anim = false})
+  msgs_hospital[10] = _navi:new('I asked him if he\n\nknew how serious my', {box_anim = false})
+  msgs_hospital[11] = _navi:new('condition was. I\n\nfelt overwhelmed,', {box_anim = false})
+  msgs_hospital[12] = _navi:new('I started crying.\n\nThen he hugged me', {box_anim = false})
+  msgs_hospital[13] = _navi:new('tightly for what felt\n\nlike a lifetime.', {box_anim = false})
+  msgs_hospital[14] = _navi:new("I cried as he\n\nheld me.", {box_anim = false})
 
   msgs_bedroom = {}
   msgs_bedroom[1] = _navi:new('Bedroom')
@@ -108,8 +121,6 @@ function love.load()
 end
 
 function love.draw()
-  -- debug
-  -- print(map.tileInstances[10][10].gid)
 
   love.graphics.scale(3, 3)
   local translateX = 0
@@ -140,22 +151,22 @@ function love.draw()
 
   love.graphics.scale(0.5, 0.5)
   if stepping_on_event(200, 184, 16, 8) then
-    _navi.play_list(msgs_dinner,0,225)
+    _navi.play_list(msgs_dinner,-1,225)
 
   elseif stepping_on_event(41 * 8, 47 * 8, 32, 8) then
     _navi.play_list(msgs_park,-1,225)
 
   elseif stepping_on_event(109 * 8, 38 * 8, 16, 8) then
-    _navi.play_list(msgs_hospital,25,235)
+    _navi.play_list(msgs_hospital,-1,225)
 
   elseif stepping_on_event(139 * 8, 87 * 8, 8, 40) then
-    _navi.play_list(msgs_bedroom,50,200)
+    _navi.play_list(msgs_bedroom,-1,225)
 
   elseif stepping_on_event(33 * 8, 123 * 8, 128, 64) then
-    _navi.play_list(msgs_forest,150,25)
+    _navi.play_list(msgs_forest,-1,225)
 
   elseif stepping_on_event(117 * 8, 134 * 8, 16, 8) and reached_end then
-    _navi.play_list(msgs_end,0,225)
+    _navi.play_list(msgs_end,-1,225)
   end
 
   arc.clear_key()
