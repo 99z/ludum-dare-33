@@ -6,6 +6,10 @@ _navi = require(arc_path .. 'navi')
 
 function love.load()
 
+  music = love.audio.newSource("assets/sounds/dark.wav", "stream")
+  music:setLooping(true)
+  love.audio.play(music)
+
   windowWidth = love.graphics.getWidth()
   windowHeight = love.graphics.getHeight()
 
@@ -213,6 +217,7 @@ function love.draw()
   elseif stepping_on_event(117 * 8, 132 * 8, 16, 12) and sprite.reached_end then
     _navi.play_list(msgs_end,-1,225)
     sprite.movement_locked = true
+    love.audio.stop(music)
   end
 
   arc.clear_key()
