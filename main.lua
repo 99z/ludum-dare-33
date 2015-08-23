@@ -1,5 +1,9 @@
 local sti = require "lib/sti"
 
+arc_path = 'lib/arc/'
+require(arc_path .. 'arc')
+_navi = require(arc_path .. 'navi')
+
 function love.load()
 
   windowWidth = love.graphics.getWidth()
@@ -17,8 +21,12 @@ function love.load()
   local spriteLayer = map.layers["Sprite Layer"]
   spriteLayer.sprite = {
     image = love.graphics.newImage("assets/images/august01.png"),
-    x = 100,
-    y = 100,
+    x = 80 * scale,
+    y = 72 * scale,
+    w = 16/2,
+    h = 16/2,
+    ox = 48/2,
+    oy = 48/2,
     r = 0
   }
 
@@ -44,9 +52,14 @@ function love.load()
     love.graphics.draw(self.sprite.image, x, y, r, 1, 1, 8, 8)
   end
 
+  m = {}
+  m[1] = _navi:new('This is a test')
+
 end
 
 function love.draw()
+  -- debug
+  -- print(map.tileInstances[10][10].gid)
 
   love.graphics.scale(3, 3)
   local translateX = 0
@@ -56,6 +69,7 @@ function love.draw()
 
   -- note: this no longer accepts scale parameters, thus l.g.scale above
   map:draw()
+  draw_event_debug(100, 50, 50, 50)
 
   love.graphics.setColor(255, 0, 0, 255)
   map:drawWorldCollision(collision)
@@ -63,11 +77,17 @@ function love.draw()
   love.graphics.polygon("line", sprite.body:getWorldPoints(sprite.shape:getPoints()))
   love.graphics.setColor(255, 255, 255, 255)
 
+  if stepping_on_event(100, 50, 50, 50) then
+    print(sprite.x, sprite.y)
+    _navi.play_list(m,20,20)
+  end
+
 end
 
 function love.update(dt)
 
   world:update(dt)
+  arc.check_keys(dt)
 
   local sprite = map.layers["Sprite Layer"].sprite
   local down = love.keyboard.isDown
@@ -84,6 +104,36 @@ function love.update(dt)
 
 end
 
-function love.kepressed(key)
+function draw_event_debug(event_x, event_y, event_width, event_height)
+  love.graphics.setColor(0, 125, 50, 100)
+  love.graphics.rectangle("fill", event_x, event_y, event_width,event_height)
+  love.graphics.rectangle("line", event_x, event_y, event_width,event_height)
+end
 
+function stepping_on_event(event_x, event_y, event_width, event_height)
+  local sprite = map.layers["Sprite Layer"].sprite
+
+  if sprite.x - sprite.w < event_x + event_width and
+     event_x < sprite.x + sprite.w and
+     sprite.y - sprite.h < event_y + event_height and
+     event_y < sprite.y + sprite.h then
+     return true
+  end
+  return false
+end
+
+-- function stepping_on_event(event_x, event_y, event_width, event_height)
+--   local sprite = map.layers["Sprite Layer"].sprite
+--
+--   if sprite.x + sprite.w >= event_x and
+--      sprite.x <= event_x + event_width and
+--      sprite.y + sprite.h >= event_y and
+--      sprite.y + sprite.oy <= event_y + event_height then
+--      return true
+--   end
+--   return false
+-- end
+
+function love.keypressed(key)
+  arc.set_key(key)
 end
