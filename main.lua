@@ -104,8 +104,10 @@ function love.draw()
   draw_event_debug(200, 184, 16, 16)
 
   love.graphics.setColor(255, 0, 0, 255)
+  -- debug, drawing box around collidable tiles
   -- map:drawWorldCollision(collision)
   love.graphics.setColor(255, 0, 0, 255)
+  -- debug, drawing box around august
   -- love.graphics.polygon("line", sprite.body:getWorldPoints(sprite.shape:getPoints()))
   love.graphics.pop()
   love.graphics.setColor(255, 255, 255, 255)
