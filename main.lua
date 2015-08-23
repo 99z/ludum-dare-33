@@ -48,7 +48,7 @@ function love.load()
     r = 0
   }
 
-
+  reached_end = false
 
   spriteLayer.sprite.body = love.physics.newBody(world, spriteLayer.sprite.x/2,
                                                  spriteLayer.sprite.y/2,
@@ -56,7 +56,7 @@ function love.load()
   spriteLayer.sprite.body:setLinearDamping(10)
   spriteLayer.sprite.body:setFixedRotation(true)
 
-  spriteLayer.sprite.shape = love.physics.newRectangleShape(16, 16)
+  spriteLayer.sprite.shape = love.physics.newRectangleShape(14, 14)
   spriteLayer.sprite.fixture = love.physics.newFixture(spriteLayer.sprite.body,
                                                        spriteLayer.sprite.shape)
 
@@ -71,13 +71,24 @@ function love.load()
     love.graphics.draw(august_spr, self.sprite.image, x, y, r, 1, 1, 8, 8)
   end
 
-  m = {}
-  m[1] = _navi:new('Our first date.')
-  m[2] = _navi:new('Remember that night?')
+  msgs_dinner = {}
+  msgs_dinner[1] = _navi:new('Our first date.')
+  msgs_dinner[2] = _navi:new('Remember that night?')
 
+  msgs_park = {}
+  msgs_park[1] = _navi:new('Park')
 
-  m2 = {}
-  m2[1] = _navi:new('This is another test')
+  msgs_hospital = {}
+  msgs_hospital[1] = _navi:new('Hospital')
+
+  msgs_bedroom = {}
+  msgs_bedroom[1] = _navi:new('Bedroom')
+
+  msgs_forest = {}
+  msgs_forest[1] = _navi:new('Forest')
+
+  msgs_end = {}
+  msgs_end[1] = _navi:new('End')
 
 end
 
@@ -113,10 +124,23 @@ function love.draw()
   love.graphics.setColor(255, 255, 255, 255)
 
   love.graphics.scale(0.5, 0.5)
-  if stepping_on_event(200, 184, 16, 16) then
-    _navi.play_list(m,25,200)
-  elseif stepping_on_event(41 * 8, 47 * 8, 32, 16) then
-    _navi.play_list(m2,20,20)
+  if stepping_on_event(200, 184, 16, 8) then
+    _navi.play_list(msgs_dinner,25,50)
+
+  elseif stepping_on_event(41 * 8, 47 * 8, 32, 8) then
+    _navi.play_list(msgs_park,20,55)
+
+  elseif stepping_on_event(109 * 8, 38 * 8, 16, 8) then
+    _navi.play_list(msgs_hospital,25,235)
+
+  elseif stepping_on_event(139 * 8, 87 * 8, 8, 40) then
+    _navi.play_list(msgs_bedroom,50,200)
+
+  elseif stepping_on_event(33 * 8, 123 * 8, 128, 64) then
+    _navi.play_list(msgs_forest,150,25)
+
+  elseif stepping_on_event(117 * 8, 134 * 8, 16, 8) and reached_end then
+    _navi.play_list(msgs_end,25,200)
   end
 
 end
