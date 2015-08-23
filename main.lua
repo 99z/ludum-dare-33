@@ -18,6 +18,8 @@ function love.load()
 
   map:addCustomLayer("Sprite Layer", 2)
 
+  alice_spr = love.graphics.newImage("assets/images/alice_bed.png")
+  alice_spr:setFilter('nearest', 'nearest')
   august_spr = love.graphics.newImage("assets/images/august.png")
   august_spr:setFilter('nearest', 'nearest')
   august_anim = {
@@ -43,12 +45,18 @@ function love.load()
     -- change w & h to radius or something
     w = 8,
     h = 8,
-    ox = 48/2,
-    oy = 48/2,
+    reached_end = false,
+    r = 0
+  }
+  spriteLayer.alice = {
+    image = alice_spr,
+    x = 16 * 25,
+    y = 16 * 75,
+    w = 32,
+    h = 16,
     r = 0
   }
 
-  reached_end = false
 
   spriteLayer.sprite.body = love.physics.newBody(world, spriteLayer.sprite.x/2,
                                                  spriteLayer.sprite.y/2,
@@ -69,6 +77,9 @@ function love.load()
     local y = math.floor(self.sprite.y)
     local r = self.sprite.r
     love.graphics.draw(august_spr, self.sprite.image, x, y, r, 1, 1, 8, 8)
+    if self.sprite.reached_end then
+      love.graphics.draw(self.alice.image, 119 * 8, 131 * 8, r, 1, 1, w, h)
+    end
   end
 
   msgs_dinner = {}
@@ -118,22 +129,21 @@ function love.load()
   msgs_bedroom[5] = _navi:new('stayed in bed and\n\nwithout a care in', {box_anim=false})
   msgs_bedroom[6] = _navi:new("the world. Content,\n\nI'd ask if we", {box_anim=false})
   msgs_bedroom[7] = _navi:new("could have every day\n\nbe like these.", {box_anim = false})
-  msgs_bedroom[8] = _navi:new("I'm not going anywhere,\n\nhe said.", {box_anim = false})
+  msgs_bedroom[8] = _navi:new("I'm not going\n\nanywhere, he said.", {box_anim = false})
   msgs_bedroom[9] = _navi:new("A chaque oiseau\n\nson nid est beau,", {box_anim = false})
   msgs_bedroom[10] = _navi:new('I said.', {box_anim = false})
 
   msgs_forest = {}
-  msgs_forest[1] = _navi:new("My first date with\n\nhim.", {box_anim=false})
-  msgs_forest[2] = _navi:new("I'll always remember\n\nthat night...", {box_anim = false})
-  msgs_forest[3] = _navi:new('...but not because\n\nit was romantic!', {box_anim = false})
-  msgs_forest[4] = _navi:new('In the middle of\n\neating he started', {box_anim=false})
-  msgs_forest[5] = _navi:new('to sneeze uncontrol-\n\nlably and knocked', {box_anim=false})
-  msgs_forest[6] = _navi:new('his drink over.', {box_anim=false})
-  msgs_forest[7] = _navi:new("I couldn't stop lau-\n\nghing for the rest", {box_anim = false})
-  msgs_forest[8] = _navi:new("of the evening. I\n\nhaven't seen his", {box_anim = false})
-  msgs_forest[9] = _navi:new("face so red since!", {box_anim = false})
-  msgs_forest[10] = _navi:new('Somehow, that was the\n\nmost charming thing', {box_anim = false})
-  msgs_forest[11] = _navi:new('he could have done.', {box_anim = false})
+  msgs_forest[1] = _navi:new("Skidmarks.", {box_anim=false})
+  msgs_forest[2] = _navi:new("The guard rails on\n\nthe Parkway didn't", {box_anim = false})
+  msgs_forest[3] = _navi:new('do a thing. Not at\n\nthat speed, the', {box_anim = false})
+  msgs_forest[4] = _navi:new('police told me.\n\nI was at work when', {box_anim=false})
+  msgs_forest[5] = _navi:new('it happened. I spent\n\nthe rest of the', {box_anim=false})
+  msgs_forest[6] = _navi:new('day sitting under\n\na tree next to what', {box_anim=false})
+  msgs_forest[7] = _navi:new("was left of his car.\n\nI didn't cry.", {box_anim = false})
+  msgs_forest[8] = _navi:new("I didn't do anything.", {box_anim = false})
+  msgs_forest[9] = _navi:new("I wondered if I'd\n\nwake up the next", {box_anim = false})
+  msgs_forest[10] = _navi:new("time I fell asleep.", {box_anim = false})
 
   msgs_end = {}
   msgs_end[1] = _navi:new("My first date with\n\nhim.", {box_anim=false})
@@ -203,6 +213,14 @@ function love.draw()
 
 end
 
+function check_all_events_hit()
+  return msgs_dinner[11]:is_over() and
+         msgs_park[8]:is_over() and
+         msgs_hospital[14]:is_over() and
+         msgs_bedroom[10]:is_over() and
+         msgs_forest[10]:is_over()
+end
+
 function love.update(dt)
 
   world:update(dt)
@@ -213,6 +231,7 @@ function love.update(dt)
 
   local x, y = 0, 0
 
+  if check_all_events_hit() then sprite.reached_end = true end
   -- elseifs to stop diagonal movement
   if down("w") or down("up") then
     sprite.image = august_anim["up"][1]
