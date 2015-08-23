@@ -72,7 +72,9 @@ function love.load()
   end
 
   m = {}
-  m[1] = _navi:new('This is a test')
+  m[1] = _navi:new('Our first date.')
+  m[2] = _navi:new('Remember that night?')
+
 
   m2 = {}
   m2[1] = _navi:new('This is another test')
@@ -102,14 +104,15 @@ function love.draw()
   draw_event_debug(200, 184, 16, 16)
 
   love.graphics.setColor(255, 0, 0, 255)
-  map:drawWorldCollision(collision)
+  -- map:drawWorldCollision(collision)
   love.graphics.setColor(255, 0, 0, 255)
-  love.graphics.polygon("line", sprite.body:getWorldPoints(sprite.shape:getPoints()))
+  -- love.graphics.polygon("line", sprite.body:getWorldPoints(sprite.shape:getPoints()))
   love.graphics.pop()
   love.graphics.setColor(255, 255, 255, 255)
 
+  love.graphics.scale(0.5, 0.5)
   if stepping_on_event(200, 184, 16, 16) then
-    _navi.play_list(m,20,20)
+    _navi.play_list(m,25,200)
   else if stepping_on_event(41 * 8, 47 * 8, 32, 16) then
     _navi.play_list(m2,20,20) end
   end
