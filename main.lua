@@ -11,7 +11,7 @@ function love.load()
 
   love.physics.setMeter(8)
 
-  map = sti.new("testmap.lua")
+  map = sti.new("testmap_lg.lua")
   world = love.physics.newWorld(0, 0)
 
   collision = map:initWorldCollision(world)
@@ -23,6 +23,7 @@ function love.load()
     image = love.graphics.newImage("assets/images/august01.png"),
     x = 80 * scale,
     y = 72 * scale,
+    -- change w & h to radius or something
     w = 16/2,
     h = 16/2,
     ox = 48/2,
@@ -66,18 +67,27 @@ function love.draw()
   local translateY = 0
   local sprite = map.layers["Sprite Layer"].sprite
 
+  local ww = love.graphics.getWidth()
+  local wh = love.graphics.getHeight()
+  local tx = math.floor(-sprite.x + ww / 2 - 160)
+  local ty = math.floor(-sprite.y + wh / 2 - 144)
 
+
+  love.graphics.push()
+	love.graphics.translate(tx, ty)
+	map:setDrawRange(-tx, -ty, ww, wh)
   -- note: this no longer accepts scale parameters, thus l.g.scale above
   map:draw()
-  draw_event_debug(100, 50, 50, 50)
+  draw_event_debug(100, 50, 30, 30)
 
   love.graphics.setColor(255, 0, 0, 255)
   map:drawWorldCollision(collision)
   love.graphics.setColor(255, 0, 0, 255)
   love.graphics.polygon("line", sprite.body:getWorldPoints(sprite.shape:getPoints()))
+  love.graphics.pop()
   love.graphics.setColor(255, 255, 255, 255)
 
-  if stepping_on_event(100, 50, 50, 50) then
+  if stepping_on_event(100, 50, 30, 30) then
     print(sprite.x, sprite.y)
     _navi.play_list(m,20,20)
   end
