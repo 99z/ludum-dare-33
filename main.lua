@@ -45,7 +45,8 @@ function love.load()
     -- change w & h to radius or something
     w = 8,
     h = 8,
-    reached_end = false,
+    reached_end = true,
+    movement_locked = false,
     r = 0
   }
   spriteLayer.alice = {
@@ -146,7 +147,7 @@ function love.load()
   msgs_forest[10] = _navi:new("time I fell asleep.", {box_anim = false})
 
   msgs_end = {}
-  msgs_end[1] = _navi:new("My first date with\n\nhim.", {box_anim=false})
+  msgs_end[1] = _navi:new("My first date with\n\nhim.", {box_anim=false, skip=false, wait=3})
   msgs_end[2] = _navi:new("I'll always remember\n\nthat night...", {box_anim = false})
   msgs_end[3] = _navi:new('...but not because\n\nit was romantic!', {box_anim = false})
   msgs_end[4] = _navi:new('In the middle of\n\neating he started', {box_anim=false})
@@ -205,8 +206,9 @@ function love.draw()
   elseif stepping_on_event(33 * 8, 123 * 8, 128, 64) then
     _navi.play_list(msgs_forest,-1,225)
 
-  elseif stepping_on_event(117 * 8, 134 * 8, 16, 8) and reached_end then
+  elseif stepping_on_event(117 * 8, 132 * 8, 16, 12) and sprite.reached_end then
     _navi.play_list(msgs_end,-1,225)
+    sprite.movement_locked = true
   end
 
   arc.clear_key()
@@ -232,6 +234,7 @@ function love.update(dt)
   local x, y = 0, 0
 
   if check_all_events_hit() then sprite.reached_end = true end
+
   -- elseifs to stop diagonal movement
   if down("w") or down("up") then
     sprite.image = august_anim["up"][1]
@@ -248,7 +251,9 @@ function love.update(dt)
   end
 
   -- sprite.body:setMass(20)
-  sprite.body:applyForce(x, y)
+  if not sprite.movement_locked then
+    sprite.body:applyForce(x, y)
+  end
   sprite.x, sprite.y = sprite.body:getWorldCenter()
 
   map:update(dt)
