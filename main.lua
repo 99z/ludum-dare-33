@@ -1,10 +1,47 @@
+--[[
+author:
+  nsm (hello [at] nicolas.moe)
+
+description:
+  find alice.
+
+notes:
+  my first LD game and first ever game from scratch.
+  it was a mad dash to familiarize myself with lua and figure out
+  what resources were available for what I wanted to complete.
+
+  it turned out almost exactly as I wanted, with less polish than I wanted,
+  of course :)
+
+  didn't want to fuss around too much with game mechanics since this is
+  a whole new world for me - so I went with a "story-driven" approach.
+  hopefully it wasn't a story borne totally of sleep deprivation and lack
+  of creativity.
+
+  my apologies for the programmer art!
+
+  would not have been possible without the help of the brilliant authors of
+  a couple libraries I used. you guys made this 48 hours much less of a hell
+  than it could have been!
+
+libraries used:
+  sti: https://github.com/karai17/Simple-Tiled-Implementation
+  navi: https://love2d.org/forums/viewtopic.php?f=5&t=9265
+
+known issues:
+  - gridlocked movement would be better
+  - animations for august... although, it probably fits the story better w/o
+  - sometimes get stuck on edge of wall? experience this behavior in debug,
+    when testing release version seemed to be ok
+--]]
+
 -- IMPORTS
 require('splash')
--- sti: https://github.com/karai17/Simple-Tiled-Implementation
+-- sti
 -- handles map loading/drawing from Tiled .lua export
 -- also handles collision
 local sti = require "lib/sti"
--- navi: https://love2d.org/forums/viewtopic.php?f=5&t=9265
+-- navi
 -- library to make text boxes easy and nice
 arc_path = 'lib/arc/'
 require(arc_path .. 'arc')
@@ -110,7 +147,7 @@ function love.load()
   love.audio.play(music)
 
   -- LOADING MESSAGES
-  -- see navi documentation for what this stuff does, it's pretty cool :)
+  -- see navi documentation for what this stuff does, it's pretty cool
   msgs_dinner = {}
   msgs_dinner[1] = _navi:new("My first date with\n\nhim.", {box_anim=false})
   msgs_dinner[2] = _navi:new("I'll always remember\n\nthat night...", {box_anim = false})
