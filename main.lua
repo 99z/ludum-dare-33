@@ -103,7 +103,7 @@ function love.load()
     y = 16 * 75,
     w = 8,
     h = 8,
-    reached_end = true,
+    reached_end = false,
     movement_locked = false,
     r = 0
   }
