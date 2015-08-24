@@ -10,8 +10,9 @@ notes:
   it was a mad dash to familiarize myself with lua and figure out
   what resources were available for what I wanted to complete.
 
-  it turned out almost exactly as I wanted, with less polish than I wanted,
-  of course :)
+  went for a gameboy classic kind of feel... minus the black background. oops!
+  it turned out almost exactly as I wanted, with less polish than I
+  wanted, of course :)
 
   didn't want to fuss around too much with game mechanics since this is
   a whole new world for me - so I went with a "story-driven" approach.
