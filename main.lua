@@ -1,54 +1,68 @@
-local sti = require "lib/sti"
+-- IMPORTS
 require('splash')
+-- sti: https://github.com/karai17/Simple-Tiled-Implementation
+-- handles map loading/drawing from Tiled .lua export
+-- also handles collision
+local sti = require "lib/sti"
+-- navi: https://love2d.org/forums/viewtopic.php?f=5&t=9265
+-- library to make text boxes easy and nice
 arc_path = 'lib/arc/'
 require(arc_path .. 'arc')
 _navi = require(arc_path .. 'navi')
 
 function love.load()
 
-  title = love.graphics.newImage("assets/images/title.png")
+  -- yay lua
+  lg = love.graphics
 
-  music = love.audio.newSource("assets/sounds/dark.wav", "stream")
-  music:setLooping(true)
-  love.audio.play(music)
+  -- game state set to splash initially
+  state = "splash"
+  windowWidth = lg.getWidth()
+  windowHeight = lg.getHeight()
 
-  windowWidth = love.graphics.getWidth()
-  windowHeight = love.graphics.getHeight()
+  -- LOADING GRAPHICS & SETTING UP MAP
+  title = lg.newImage("assets/images/title.png")
 
+  map = sti.new("assets/mind.lua")
+  world = love.physics.newWorld(0, 0)
   love.physics.setMeter(8)
 
-  map = sti.new("main_map.lua")
-  world = love.physics.newWorld(0, 0)
-
+  -- initWorldCollision is part of sti
+  -- automatically detects tiles with the "collidable" property set to true
+  -- this property can be set in Tiled
   collision = map:initWorldCollision(world)
 
+
+  -- LOADING AUGUST AND ALICE
+  -- sprite layer for august and alice, need to be on top of map
   map:addCustomLayer("Sprite Layer", 2)
 
-  alice_spr = love.graphics.newImage("assets/images/alice_bed.png")
+  alice_spr = lg.newImage("assets/images/alice_bed.png")
   alice_spr:setFilter('nearest', 'nearest')
-  august_spr = love.graphics.newImage("assets/images/august.png")
+
+  august_spr = lg.newImage("assets/images/august.png")
   august_spr:setFilter('nearest', 'nearest')
+
   august_anim = {
     up = {
-      love.graphics.newQuad(32, 0, 16, 16, 64, 32)
+      lg.newQuad(32, 0, 16, 16, 64, 32)
     },
     down = {
-      love.graphics.newQuad(0, 0, 16, 16, 64, 32)
+      lg.newQuad(0, 0, 16, 16, 64, 32)
     },
     left = {
-      love.graphics.newQuad(48, 0, 16, 16, 64, 32)
+      lg.newQuad(48, 0, 16, 16, 64, 32)
     },
     right = {
-      love.graphics.newQuad(16, 0, 16, 16, 64, 32)
+      lg.newQuad(16, 0, 16, 16, 64, 32)
     }
   }
 
   local spriteLayer = map.layers["Sprite Layer"]
-  spriteLayer.sprite = {
+  spriteLayer.august = {
     image = august_anim["down"][1],
     x = 16 * 25,
     y = 16 * 75,
-    -- change w & h to radius or something
     w = 8,
     h = 8,
     reached_end = true,
@@ -65,30 +79,38 @@ function love.load()
   }
 
 
-  spriteLayer.sprite.body = love.physics.newBody(world, spriteLayer.sprite.x/2,
-                                                 spriteLayer.sprite.y/2,
+  -- setting movement physics and collision on august
+  spriteLayer.august.body = love.physics.newBody(world, spriteLayer.august.x/2,
+                                                 spriteLayer.august.y/2,
                                                  "dynamic")
-  spriteLayer.sprite.body:setLinearDamping(10)
-  spriteLayer.sprite.body:setFixedRotation(true)
+  spriteLayer.august.body:setLinearDamping(10)
+  spriteLayer.august.body:setFixedRotation(true)
 
-  spriteLayer.sprite.shape = love.physics.newRectangleShape(14, 14)
-  spriteLayer.sprite.fixture = love.physics.newFixture(spriteLayer.sprite.body,
-                                                       spriteLayer.sprite.shape)
+  spriteLayer.august.shape = love.physics.newRectangleShape(14, 14)
+  spriteLayer.august.fixture = love.physics.newFixture(spriteLayer.august.body,
+                                                       spriteLayer.august.shape)
 
   function spriteLayer:update(dt)
 
   end
 
   function spriteLayer:draw()
-    local x = math.floor(self.sprite.x)
-    local y = math.floor(self.sprite.y)
-    local r = self.sprite.r
-    love.graphics.draw(august_spr, self.sprite.image, x, y, r, 1, 1, 8, 8)
-    if self.sprite.reached_end then
-      love.graphics.draw(self.alice.image, 119 * 8, 131 * 8, r, 1, 1, w, h)
+    local x = math.floor(self.august.x)
+    local y = math.floor(self.august.y)
+    local r = self.august.r
+    lg.draw(august_spr, self.august.image, x, y, r, 1, 1, 8, 8)
+    if self.august.reached_end then
+      lg.draw(self.alice.image, 119 * 8, 131 * 8, r, 1, 1, w, h)
     end
   end
 
+  -- LOADING AUDIO
+  music = love.audio.newSource("assets/sounds/dark.wav", "stream")
+  music:setLooping(true)
+  love.audio.play(music)
+
+  -- LOADING MESSAGES
+  -- see navi documentation for what this stuff does, it's pretty cool :)
   msgs_dinner = {}
   msgs_dinner[1] = _navi:new("My first date with\n\nhim.", {box_anim=false})
   msgs_dinner[2] = _navi:new("I'll always remember\n\nthat night...", {box_anim = false})
@@ -163,52 +185,57 @@ function love.load()
   msgs_end[8] = _navi:new("morning. Mon cher,\n\npas plus de", {box_anim = false, skip=false, wait=1})
   msgs_end[9] = _navi:new("cauchemars.\n\nI know you've been", {box_anim = false, skip=false, wait=1})
   msgs_end[10] = _navi:new('haunting me patiently.\n\nNo more.', {box_anim = false, skip=false, wait=1})
-  msgs_end[11] = _navi:new('Now we can go\n\ntogether.', {box_anim = false, skip=false, wait=1})
+  msgs_end[11] = _navi:new("I'll join you now.", {box_anim = false, skip=false, wait=1})
   msgs_end[12] = _navi:new('My love?', {box_anim = false, skip=false, wait=1})
   msgs_end[13] = _navi:new('Is', {box_anim = false, skip=false, wait=2, msg_spd=6})
   msgs_end[14] = _navi:new('that', {box_anim = false, skip=false, wait=2, msg_spd=4})
   msgs_end[15] = _navi:new('you?...', {box_anim = false, skip=false, wait=2, msg_spd=2})
 
-
-  state = "splash"
+  -- load the beautiful splash screen
   splash.load()
 
 end
 
 function love.draw()
 
-  love.graphics.scale(3, 3)
+  -- needed for map rendering to scale properly
+  lg.scale(3, 3)
+
+  -- messy, but throwing everything game-related inside else so splash gets
+  -- rendered before anything else
   if state == "splash" then
     splash.draw()
   else
 
-    local translateX = 0
-    local translateY = 0
-    local sprite = map.layers["Sprite Layer"].sprite
+    local sprite = map.layers["Sprite Layer"].august
 
-    local ww = love.graphics.getWidth()
-    local wh = love.graphics.getHeight()
+    local ww = lg.getWidth()
+    local wh = lg.getHeight()
     local tx = math.floor(-sprite.x + ww / 2 - 160)
     local ty = math.floor(-sprite.y + wh / 2 - 144)
 
-
-    love.graphics.push()
-  	love.graphics.translate(tx, ty)
+    -- from here until lg.pop() is what renders the map as we move
+    -- copied from the sti demo ;)
+    lg.push()
+  	lg.translate(tx, ty)
   	map:setDrawRange(-tx, -ty, ww, wh)
     -- note: this no longer accepts scale parameters, thus l.g.scale above
     map:draw()
-    draw_event_debug(200, 184, 16, 16)
 
-    love.graphics.setColor(255, 0, 0, 255)
+    lg.setColor(255, 0, 0, 255)
+
     -- debug, drawing box around collidable tiles
     -- map:drawWorldCollision(collision)
-    love.graphics.setColor(255, 0, 0, 255)
-    -- debug, drawing box around august
-    -- love.graphics.polygon("line", sprite.body:getWorldPoints(sprite.shape:getPoints()))
-    love.graphics.pop()
-    love.graphics.setColor(255, 255, 255, 255)
 
-    love.graphics.scale(0.5, 0.5)
+    -- debug, drawing box around august
+    -- lg.polygon("line", sprite.body:getWorldPoints(sprite.shape:getPoints()))
+    lg.pop()
+    lg.setColor(255, 255, 255, 255)
+
+    -- scaling message boxes a bit smaller
+    lg.scale(0.5, 0.5)
+
+    -- play messages corresponding to different event zones
     if stepping_on_event(200, 184, 16, 8) then
       _navi.play_list(msgs_dinner,-1,225)
 
@@ -236,35 +263,22 @@ function love.draw()
 
 end
 
-function reunited()
-  if msgs_end[15]:is_over() then
-    love.event.quit()
-  end
-end
-
-function check_all_events_hit()
-  return msgs_dinner[11]:is_over() and
-         msgs_park[8]:is_over() and
-         msgs_hospital[14]:is_over() and
-         msgs_bedroom[10]:is_over() and
-         msgs_forest[10]:is_over()
-end
-
 function love.update(dt)
 
+  -- again, messy, but only doing updates for game if in game state
   if state == "game" then
     reunited()
 
     world:update(dt)
     arc.check_keys(dt)
 
-    local sprite = map.layers["Sprite Layer"].sprite
-    local down = love.keyboard.isDown
-
-    local x, y = 0, 0
-
+    local sprite = map.layers["Sprite Layer"].august
     if check_all_events_hit() then sprite.reached_end = true end
 
+    local down = love.keyboard.isDown
+
+    -- handling movement
+    local x, y = 0, 0
     -- elseifs to stop diagonal movement
     if down("w") or down("up") then
       sprite.image = august_anim["up"][1]
@@ -280,7 +294,7 @@ function love.update(dt)
       x = x + 8000
     end
 
-    -- sprite.body:setMass(20)
+    sprite.body:setMass(20)
     if not sprite.movement_locked then
       sprite.body:applyForce(x, y)
     end
@@ -291,28 +305,44 @@ function love.update(dt)
 
 end
 
-function draw_event_debug(event_x, event_y, event_width, event_height)
-  love.graphics.setColor(0, 125, 50, 100)
-  love.graphics.rectangle("fill", event_x, event_y, event_width,event_height)
-  love.graphics.rectangle("line", event_x, event_y, event_width,event_height)
-end
-
-function stepping_on_event(event_x, event_y, event_width, event_height)
-  local sprite = map.layers["Sprite Layer"].sprite
-
-  if sprite.x - sprite.w < event_x + event_width and
-     event_x < sprite.x + sprite.w and
-     sprite.y - sprite.h < event_y + event_height and
-     event_y < sprite.y + sprite.h then
-     return true
-  end
-  return false
-end
-
 function love.keypressed(key)
   if key == "return" or key == "e" then
     state = "game"
   end
 
   arc.set_key(key)
+end
+
+-- debug function to draw event zone boundaries
+function draw_event_debug(event_x, event_y, event_width, event_height)
+  lg.setColor(0, 125, 50, 100)
+  lg.rectangle("fill", event_x, event_y, event_width,event_height)
+  lg.rectangle("line", event_x, event_y, event_width,event_height)
+end
+
+-- determines if august is on top of an event zone
+-- generic bounding box logic
+function stepping_on_event(event_x, event_y, event_width, event_height)
+  local sprite = map.layers["Sprite Layer"].august
+
+  return sprite.x - sprite.w < event_x + event_width and
+         event_x < sprite.x + sprite.w and
+         sprite.y - sprite.h < event_y + event_height and
+         event_y < sprite.y + sprite.h
+end
+
+-- ca fait longtemps
+function reunited()
+  if msgs_end[15]:is_over() then love.event.quit() end
+end
+
+-- probably not the least resource-intensive way to do this, but
+-- this is run every time love.update is called and determines if
+-- august has read through all the messages
+function check_all_events_hit()
+  return msgs_dinner[11]:is_over() and
+         msgs_park[8]:is_over() and
+         msgs_hospital[14]:is_over() and
+         msgs_bedroom[10]:is_over() and
+         msgs_forest[10]:is_over()
 end

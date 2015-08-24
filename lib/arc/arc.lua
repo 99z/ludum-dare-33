@@ -64,8 +64,6 @@ arc.img = {
 
 -- sound effects
 arc.sfx = {
-	cursor = la.newSource('assets/sounds/cursor.wav','static'),
-	confirm = la.newSource('assets/sounds/confirm.wav','static')
 }
 
 -- process directional keys

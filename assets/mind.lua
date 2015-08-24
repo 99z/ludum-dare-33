@@ -17,7 +17,7 @@ return {
       tileheight = 8,
       spacing = 0,
       margin = 0,
-      image = "assets/images/table.png",
+      image = "images/table.png",
       imagewidth = 32,
       imageheight = 32,
       tileoffset = {
@@ -115,7 +115,7 @@ return {
       tileheight = 8,
       spacing = 0,
       margin = 0,
-      image = "assets/images/world.png",
+      image = "images/world.png",
       imagewidth = 160,
       imageheight = 80,
       tileoffset = {
